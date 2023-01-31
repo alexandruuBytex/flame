@@ -1,0 +1,48 @@
+{
+    "jobSpec": {
+        "allOf": "basicJobInfo",
+        "dataSpec": "dataSpec",
+        "modelSpec": "modelSpec"
+    },
+
+    "basicJobInfo": {
+        "designId": "mnist_non_orchestration",
+        "schemaVersion": "1",
+        "codeVersion": "1",
+        "priority": "low",
+        "maxRunTime": 1800
+    },
+
+
+    
+    "dataSpec": {
+	    "fromUser": {
+	        "default": 1
+	    },
+	    "fromSystem": []
+    },
+
+    "modelSpec": {
+        "baseModel": "baseModel",
+        "selector": "selector",
+        "hyperparameters": "hyperparameters",
+        "dependencies": "dependencies"
+    },
+    
+    "baseModel": {
+	    "name": "",
+	    "version": 0
+    },
+    "selector": {
+	    "sort": "default",
+	    "kwargs": {}
+    },
+    "hyperparameters": {
+	    "rounds": 5,
+	    "batchSize": 32,
+	    "learningRate": 0.01
+    },
+    "dependencies" : [
+	    "numpy >= 1.2.0"
+    ]
+}

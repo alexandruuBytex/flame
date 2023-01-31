@@ -1,0 +1,49 @@
+{
+    "jobSpec": {
+        "allOf": "basicJobInfo",
+        "dataSpec": "dataSpec",
+        "modelSpec": "modelSpec"
+    },
+
+    "basicJobInfo": {
+        "designId": "adult",
+        "schemaVersion": "1",
+        "codeVersion": "1",
+        "priority": "low",
+        "maxRunTime": 1800
+    },
+
+    "dataSpec": {
+        "fromUser": {
+            "default": 1
+        },
+        "fromSystem": []
+    },
+
+    "modelSpec": {
+        "baseModel": "baseModel",
+        "optimizer": "optimizer",
+        "selector": "selector",
+        "hyperparameters": "hyperparameters",
+        "dependencies": "dependencies"
+    },
+
+    "baseModel": {
+        "name": "",
+        "version": 0
+    },
+    "optimizer": {
+        "sort": "",
+        "kwargs": {}
+    },
+    "selector": {
+        "sort": "default",
+        "kwargs": {}
+    },
+    "hyperparameters": {
+        "rounds": 5
+    },
+    "dependencies" : [
+        "numpy >= 1.2.0"
+    ]
+}
