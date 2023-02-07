@@ -1,57 +1,15 @@
 {
-    "jobSpec": {
-        "allOf": "basicJobInfo",
-        "dataSpec": "dataSpec",
-        "modelSpec": "modelSpec"
-    },
+    "designId": "parallel_exp",
+    "schemaVersion": "1",
+    "codeVersion": "1",
+    
+    "priority": "low",
 
-    "basicJobInfo": {
-        "designId": "parallel_exp",
-        "schemaVersion": "1",
-        "codeVersion": "1",
-        "priority": "low",
-        "maxRunTime": 1800
-    },
+    "backend": "mqtt",
+    "maxRunTime": 1800,
 
-    "dataSpec": {
-        "fromUser": {
-            "default": 0
-        },
-        "fromSystem": [
-            "6261a0541bf79323fd13a4e9",
-            "6261a05d1bf79323fd13a4ea",
-            "6261a0651bf79323fd13a4eb"
-        ]
-    },
+    
 
-    "modelSpec": {
-        "baseModel": "baseModel",
-        "optimizer": "optimizer",
-        "selector": "selector",
-        "hyperparameters": "hyperparameters",
-        "dependencies": "dependencies"
-    },
-
-    "baseModel": {
-        "name": "",
-        "version": 0
-    },
-    "optimizer": {
-        "sort": "fedavg",
-        "kwargs": {}
-    },
-    "selector": {
-        "sort": "random",
-        "kwargs": {
-            "k": 1
-        }
-    },
-    "hyperparameters": {
-        "rounds": 5,
-        "batchSize": 32,
-        "learningRate": 0.01
-    },
-    "dependencies" : [
-        "numpy >= 1.2.0"
-    ]
+    "dataSpecPath": "dataSpec.json",
+    "modelSpecPath": "modelSpec.json"
 }
