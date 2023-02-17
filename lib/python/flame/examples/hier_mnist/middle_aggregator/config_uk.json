@@ -80,12 +80,14 @@
         "name": "mnist"
     },
     "registry": {
-	"sort": "dummy",
-	"uri": "http://flame-mlflow:5000"
+        "sort": "mlflow",
+        "uri": "http://flame-mlflow:5000"
     },
     "selector": {
-	"sort": "default",
-	"kwargs": {}
+        "sort": "random",
+        "kwargs": {
+            "k": 1
+        }
     },
     "maxRunTime": 300,
     "realm": "default/uk/london/org2/flame",
