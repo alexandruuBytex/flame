@@ -48,18 +48,12 @@ func Create(params Params) error {
 	//Encode the data
 	postBody := openapi.DesignInfo{
 		Id:          params.DesignId,
+		Name:        params.User,
 		Description: params.Desc,
 	}
 
-	fmt.Println("---------")
-	fmt.Println(postBody.Id)
-	fmt.Println(postBody.Description)
-	fmt.Println("---------")
-
 	// send post request
 	code, responseBody, err := restapi.HTTPPost(url, postBody, "application/json")
-	fmt.Printf("Request url: %s\n", url)
-	fmt.Printf("Response code: %d\n", code)
 	if err != nil || restapi.CheckStatusCode(code) != nil {
 		var msg string
 		err = json.Unmarshal(responseBody, &msg)

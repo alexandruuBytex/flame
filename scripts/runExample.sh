@@ -1,3 +1,7 @@
+set -x;
+
+source $HOME/.bashrc
+
 exampleName=$1
 datasetFileName="dataset"
 
@@ -51,3 +55,5 @@ echo "jobID: ${jobID}"
 
 flamectl start job $jobID --insecure
 flamectl get jobs --insecure
+
+set +x;
