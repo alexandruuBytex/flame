@@ -25,6 +25,8 @@
 
 package openapi
 
+import "github.com/cisco-open/flame/pkg/openapi/constants"
+
 // DesignSchema - Schema to define the roles and their connections
 type DesignSchema struct {
 	Version string `json:"version"`
