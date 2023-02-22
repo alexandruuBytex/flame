@@ -27,25 +27,16 @@
 
  // JobSpec - Job specification
  type JobSpec struct {
-	 Id string `json:"id,omitempty"`
- 
-	 UserId string `json:"userId,omitempty"`
- 
-	 DesignId string `json:"designId"`
- 
-	 SchemaVersion string `json:"schemaVersion"`
- 
-	 CodeVersion string `json:"codeVersion"`
- 
-	 Priority JobPriority `json:"priority,omitempty"`
- 
-	 Backend CommBackend `json:"backend,omitempty"`
- 
-	 MaxRunTime int32 `json:"maxRunTime,omitempty"`
- 
-	 DataSpec DataSpec `json:"dataSpec,omitempty"`
- 
-	 ModelSpec ModelSpec `json:"modelSpec,omitempty"`
+	Id string `json:"id,omitempty"`
+	UserId string `json:"userId,omitempty"`
+	DesignId string `json:"designId"`
+	SchemaVersion string `json:"schemaVersion"`
+	CodeVersion string `json:"codeVersion"`
+	Priority JobPriority `json:"priority,omitempty"`
+	Backend CommBackend `json:"backend,omitempty"`
+	MaxRunTime int32 `json:"maxRunTime,omitempty"`
+	DataSpec DataSpec `json:"dataSpec,omitempty"`
+	ModelSpec ModelSpec `json:"modelSpec,omitempty"`
  }
  
  // AssertJobSpecRequired checks if the required fields are not zero-ed

@@ -44,6 +44,8 @@ BasicJobInfo:
       type: string
     priority:
       $ref: '#/components/schemas/JobPriority'
+    backend:
+      $ref: '#/components/schemas/CommBackend'
     maxRunTime:
       type: integer
       format: int32
@@ -57,7 +59,8 @@ BasicJobInfo:
     designId: "60d0d66716af12b787d9ef0a"
     schemaVersion: "1"
     codeVersion: "1"
-    prority: "low"
+    priority: "low"
+    backend: "mqtt"
     maxRunTime: 600
 
 JobPriority:
@@ -65,6 +68,11 @@ JobPriority:
     - low
     - medium
     - high
+
+CommBackend:
+  enum:
+    - mqtt
+    - p2p
 
 ########################################
 # Data Spec

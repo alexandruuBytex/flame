@@ -41,6 +41,7 @@ type Params struct {
 
 func Create(params Params) error {
 	// construct URL
+	fmt.Println("############ I am here")
 	uriMap := map[string]string{
 		"user":     params.User,
 		"designId": params.DesignId,
