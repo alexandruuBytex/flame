@@ -47,6 +47,7 @@ type CreateJobRequest struct {
 	CodeVersion   string              `json:"codeVersion"`
 	Priority      openapi.JobPriority `json:"priority,omitempty"`
 	MaxRunTime    int32               `json:"maxRunTime,omitempty"`
+	Backend 	  openapi.CommBackend `json:"backend,omitempty"`
 	DataSpecPath  string              `json:"dataSpecPath,omitempty"`
 	ModelSpecPath string              `json:"modelSpecPath,omitempty"`
 }
@@ -89,6 +90,7 @@ func createJobSpec(data []byte, jobFile string) (bool, openapi.JobSpec) {
 		CodeVersion:   createJobRequest.CodeVersion,
 		Priority:      createJobRequest.Priority,
 		MaxRunTime:    createJobRequest.MaxRunTime,
+		Backend: 	   createJobRequest.Backend,
 		DataSpec:      dataSpec,
 		ModelSpec:     modelSpec,
 	}

@@ -51,11 +51,23 @@ func Create(params Params) error {
 		Description: params.Desc,
 	}
 
+	fmt.Println("---------")
+	fmt.Println(postBody.Id)
+	fmt.Println(postBody.Description)
+	fmt.Println("---------")
+
 	// send post request
 	code, responseBody, err := restapi.HTTPPost(url, postBody, "application/json")
+	fmt.Printf("Request url: %s\n", url)
+	fmt.Printf("Response code: %d\n", code)
 	if err != nil || restapi.CheckStatusCode(code) != nil {
 		var msg string
-		_ = json.Unmarshal(responseBody, &msg)
+		err = json.Unmarshal(responseBody, &msg)
+
+		if err != nil {
+			fmt.Printf("Failed to unmarshal response body! Error: %s", err.Error())
+			return nil
+		}
 		fmt.Printf("Failed to create a new design - code: %d; %s\n", code, msg)
 		return nil
 	}
