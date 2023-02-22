@@ -115,6 +115,7 @@ func (c *DesignSchemasApiController) CreateDesignSchema(w http.ResponseWriter, r
 		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
 		return
 	}
+
 	if err := AssertDesignSchemaRequired(designSchemaParam); err != nil {
 		c.errorHandler(w, r, err, nil)
 		return

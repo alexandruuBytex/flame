@@ -23,4 +23,8 @@ eval $(minikube docker-env)
 
 afplay /System/Library/Sounds/Glass.aiff
 
+<<<<<<< HEAD
 set +x;
+=======
+set +x;
+>>>>>>> 939acac (Update)

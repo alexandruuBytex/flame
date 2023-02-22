@@ -1,6 +1,7 @@
 {
     "name": "A simple example schema v1.0.0",
     "description": "a sample schema to demonstrate a TAG layout",
+    "version": "1",
     "roles": [
         {
             "name": "trainer",

@@ -55,6 +55,7 @@ func Create(params Params) error {
 		constants.ParamUser:     params.User,
 		constants.ParamDesignID: params.DesignId,
 	}
+
 	url := restapi.CreateURL(params.Endpoint, restapi.CreateDesignSchemaEndPoint, uriMap)
 
 	// send post request
