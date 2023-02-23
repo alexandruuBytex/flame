@@ -92,7 +92,7 @@ class TopAggregator(Role, metaclass=ABCMeta):
 
         self._round = 1
         self._rounds = 1
-        self._rounds = self.config.hyperparameters.rounds
+        self._rounds = self.config.model.hyperparameters.rounds
         self._work_done = False
 
         self.framework = get_ml_framework_in_use()
@@ -224,8 +224,8 @@ class TopAggregator(Role, metaclass=ABCMeta):
 
     def save_params(self):
         """Save hyperparamets in a model registry."""
-        if self.config.hyperparameters:
-            self.registry_client.save_params(self.config.hyperparameters)
+        if self.config.model.hyperparameters:
+            self.registry_client.save_params(self.config.model.hyperparameters)
 
     def save_model(self):
         """Save model in a model registry."""

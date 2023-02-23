@@ -31,14 +31,16 @@ class Net(nn.Module):
     def __init__(self, input_size=30, scale=4):
         """Initialize."""
         super().__init__()
-        self.ff = nn.Sequential(*[
-            nn.Linear(input_size, 10 * scale),
-            nn.ReLU(),
-            # nn.Linear(10*scale, 10*scale),
-            # nn.ReLU(),
-            nn.Linear(10 * scale, 1),
-            nn.Sigmoid()
-        ])
+        self.ff = nn.Sequential(
+            *[
+                nn.Linear(input_size, 10 * scale),
+                nn.ReLU(),
+                # nn.Linear(10*scale, 10*scale),
+                # nn.ReLU(),
+                nn.Linear(10 * scale, 1),
+                nn.Sigmoid(),
+            ]
+        )
 
     def forward(self, x):
         """Forward."""
@@ -57,13 +59,14 @@ class PyTorchAdultAggregator(TopAggregator):
 
         self.device = None
 
-        self.epochs = self.config.hyperparameters.epochs
-        self.batch_size = self.config.hyperparameters.batch_size
+        self.epochs = self.config.model.hyperparameters.epochs
+        self.batch_size = self.config.model.hyperparameters.batch_size
 
     def initialize(self) -> None:
         """Initialize role."""
         self.device = torch.device(
-            "cuda" if torch.cuda.is_available() else "cpu")
+            "cuda" if torch.cuda.is_available() else "cpu"
+        )
         self.input_dim = 104  # use a value computed from trainer script
         self.model = Net(self.input_dim).to(self.device)
 
@@ -83,8 +86,8 @@ class PyTorchAdultAggregator(TopAggregator):
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description='')
-    parser.add_argument('config', nargs='?', default="./config.json")
+    parser = argparse.ArgumentParser(description="")
+    parser.add_argument("config", nargs="?", default="./config.json")
 
     args = parser.parse_args()
 
