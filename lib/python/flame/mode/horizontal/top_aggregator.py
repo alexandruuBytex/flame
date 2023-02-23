@@ -88,7 +88,8 @@ class TopAggregator(Role, metaclass=ABCMeta):
         # disk cache is used for saving memory in case model is large
         self.cache = Cache()
         self.optimizer = optimizer_provider.get(
-            self.config.optimizer.sort, **self.config.optimizer.kwargs
+            self.config.model.optimizer.sort,
+            **self.config.model.optimizer.kwargs,
         )
 
         self._round = 1
