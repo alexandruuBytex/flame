@@ -75,7 +75,7 @@ class Trainer(Role, metaclass=ABCMeta):
 
         self._round = 1
 
-        self._rounds = self.config.hyperparameters.rounds
+        self._rounds = self.config.model.hyperparameters.rounds
         self._work_done = False
 
         self.is_committer = False
@@ -455,8 +455,8 @@ class Trainer(Role, metaclass=ABCMeta):
     def save_params(self):
         """Save hyperparamets in a model registry."""
         logger.debug(f"saving params: is_committer: {self.is_committer}")
-        if self.config.hyperparameters and self.is_committer:
-            self.registry_client.save_params(self.config.hyperparameters)
+        if self.config.model.hyperparameters and self.is_committer:
+            self.registry_client.save_params(self.config.model.hyperparameters)
 
     def save_model(self):
         """Save model in a model registry."""
