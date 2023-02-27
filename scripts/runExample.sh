@@ -50,7 +50,7 @@ rm "${pathPrefix}tmp.json"
 rm "${pathPrefix}result.json"
 
 #echo "$(jq --arg jobID "test" '.fromSystem."0" = [ $jobID ]' "${pathPrefix}tmp.json")" > result.json
-jobID=$( flamectl create job "${pathPrefix}job-new.json" --insecure | grep "ID: " | tr -d "ID: " )
+jobID=$( flamectl create job "${pathPrefix}job.json" --insecure | grep "ID: " | tr -d "ID: " )
 echo "jobID: ${jobID}"
 
 flamectl start job $jobID --insecure
