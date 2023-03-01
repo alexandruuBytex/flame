@@ -33,7 +33,7 @@ flamectl create design "${exampleName}" -d "${exampleName} example" --insecure
 flamectl create schema "${pathPrefix}schema.json" --design "${exampleName}" --insecure
 flamectl create code "${pathPrefix}${exampleName}.zip" --design "${exampleName}" --insecure
 
-unzip -o "${pathPrefix}${exampleName}.zip"
+unzip -o "${pathPrefix}${exampleName}.zip" -d "${pathPrefix}"
 
 datasetData=$(flamectl create dataset "${pathPrefix}${datasetFileName}.json" --insecure)
 echo "datasetData: ${datasetData}"
