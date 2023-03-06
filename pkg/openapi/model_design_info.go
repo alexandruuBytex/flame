@@ -39,12 +39,7 @@ type DesignInfo struct {
 // AssertDesignInfoRequired checks if the required fields are not zero-ed
 func AssertDesignInfoRequired(obj DesignInfo) error {
 	elements := map[string]interface{}{
-<<<<<<< HEAD
 		"id": obj.Id,
-=======
-		"name": obj.Name,
-		"id":   obj.Id,
->>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 	}
 	for name, el := range elements {
 		if isZero := IsZeroValue(el); isZero {

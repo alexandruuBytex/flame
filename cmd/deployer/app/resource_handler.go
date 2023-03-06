@@ -358,11 +358,7 @@ func (r *resourceHandler) deployResources(deploymentConfig openapi.DeploymentCon
 		ctx := map[string]string{
 			"imageLoc":            deploymentConfig.ImageLoc,
 			constants.ParamTaskID: taskId,
-<<<<<<< HEAD
 			"taskKey":             deploymentConfig.AgentKVs[taskId],
-=======
-			"taskKey":             taskKey,
->>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 		}
 
 		rendered, renderErr := mustache.RenderFile(r.jobTemplatePath, &ctx)
