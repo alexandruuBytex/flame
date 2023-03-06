@@ -22,6 +22,11 @@ from pydantic import Field
 import typing as t
 from pydantic import BaseModel as pydBaseModel
 import json
+import typing as t
+from enum import Enum
+
+from pydantic import BaseModel as pydBaseModel
+from pydantic import Field
 
 from pydantic import BaseModel as pydBaseModel
 from pydantic import Field
@@ -155,6 +160,14 @@ class ChannelConfigs(FlameSchema):
     channel_brokers: dict = Field(default={})
 
 
+class Model(FlameSchema):
+    base_model: BaseModel
+    optimizer: t.Optional[Optimizer] = Field(default=Optimizer())
+    selector: Selector
+    hyperparameters: Hyperparameters
+    dependencies: list[str]
+
+
 class Config(FlameSchema):
 
     def __init__(self, config_path: str):
@@ -169,18 +182,14 @@ class Config(FlameSchema):
     task_id: str
     backend: BackendType
     channels: dict
-    hyperparameters: Hyperparameters
     brokers: Broker
     job: Job
+    model: Model
     registry: Registry
-    selector: Selector
-    optimizer: t.Optional[Optimizer] = Field(default=Optimizer())
     channel_configs: t.Optional[ChannelConfigs]
     dataset: str
     max_run_time: int
-    base_model: BaseModel
     groups: t.Optional[Groups]
-    dependencies: list[str]
     func_tag_map: t.Optional[dict]
 
 
@@ -218,11 +227,7 @@ def transform_config(raw_config: dict) -> dict:
     config_data = config_data | {
         "job": raw_config["job"],
         "registry": raw_config["registry"],
-        "selector": raw_config["selector"],
     }
-
-    if raw_config.get("optimizer", None):
-        config_data = config_data | {"optimizer": raw_config.get("optimizer")}
 
     backends, channel_brokers = transform_channel_configs(
         raw_config.get("channelConfigs", {}))
@@ -236,11 +241,27 @@ def transform_config(raw_config: dict) -> dict:
     config_data = config_data | {
         "dataset": raw_config.get("dataset", ""),
         "max_run_time": raw_config.get("maxRunTime", 300),
-        "base_model": raw_config.get("baseModel", None),
-        "dependencies": raw_config.get("dependencies", None),
     }
 
     return config_data
+
+
+def transform_model(raw_model_config: dict):
+    base_model = raw_model_config["baseModel"]
+    optimizer = raw_model_config.get("optimizer", {})
+    selector = raw_model_config["selector"]
+    hyperparameters = transform_hyperparameters(
+        raw_model_config["hyperparameters"]
+    )
+    dependencies = raw_model_config.get("dependencies", [])
+
+    return {
+        "base_model": base_model,
+        "optimizer": optimizer,
+        "selector": selector,
+        "hyperparameters": hyperparameters,
+        "dependencies": dependencies,
+    }
 
 
 def transform_channel(raw_channel_config: dict):
