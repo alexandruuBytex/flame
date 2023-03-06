@@ -58,7 +58,10 @@ func (s *DesignSchemasApiService) CreateDesignSchema(_ context.Context, user str
 	uriMap := map[string]string{
 		constants.ParamUser:     user,
 		constants.ParamDesignID: designId,
+<<<<<<< HEAD
 		constants.ParamVersion:  designSchema.Version,
+=======
+>>>>>>> cc8e286 (Sync up the generated code from openapi generator with what we have currently (#331))
 	}
 	url := restapi.CreateURL(HostEndpoint, restapi.CreateDesignSchemaEndPoint, uriMap)
 

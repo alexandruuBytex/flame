@@ -41,6 +41,10 @@ type Design struct {
 // AssertDesignRequired checks if the required fields are not zero-ed
 func AssertDesignRequired(obj Design) error {
 	elements := map[string]interface{}{
+<<<<<<< HEAD
+=======
+		"name":    obj.Name,
+>>>>>>> cc8e286 (Sync up the generated code from openapi generator with what we have currently (#331))
 		"id":      obj.Id,
 		"schemas": obj.Schemas,
 	}

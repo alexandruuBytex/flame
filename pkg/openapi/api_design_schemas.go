@@ -115,7 +115,10 @@ func (c *DesignSchemasApiController) CreateDesignSchema(w http.ResponseWriter, r
 		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
 		return
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> cc8e286 (Sync up the generated code from openapi generator with what we have currently (#331))
 	if err := AssertDesignSchemaRequired(designSchemaParam); err != nil {
 		c.errorHandler(w, r, err, nil)
 		return

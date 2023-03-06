@@ -45,9 +45,16 @@ type DesignSchema struct {
 // AssertDesignSchemaRequired checks if the required fields are not zero-ed
 func AssertDesignSchemaRequired(obj DesignSchema) error {
 	elements := map[string]interface{}{
+<<<<<<< HEAD
 		"name":     obj.Name,
 		"roles":    obj.Roles,
 		"channels": obj.Channels,
+=======
+		constants.ParamVersion: obj.Version,
+		"name":                 obj.Name,
+		"roles":                obj.Roles,
+		"channels":             obj.Channels,
+>>>>>>> cc8e286 (Sync up the generated code from openapi generator with what we have currently (#331))
 	}
 	for name, el := range elements {
 		if isZero := IsZeroValue(el); isZero {
