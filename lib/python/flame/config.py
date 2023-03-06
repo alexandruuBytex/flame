@@ -54,10 +54,13 @@ class OptimizerType(str, Enum):
     FEDADAGRAD = "fedadagrad"
     FEDADAM = "fedadam"
     FEDYOGI = "fedyogi"
+<<<<<<< HEAD
     # FedBuff from https://arxiv.org/pdf/1903.03934.pdf and
     # https://arxiv.org/pdf/2111.04877.pdf
     FEDBUFF = "fedbuff"
     FEDPROX = "fedprox"  # FedProx
+=======
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
     DEFAULT = FEDAVG
 
@@ -67,7 +70,10 @@ class SelectorType(str, Enum):
 
     DEFAULT = "default"
     RANDOM = "random"
+<<<<<<< HEAD
     FEDBUFF = "fedbuff"
+=======
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
 
 class Job(FlameSchema):
@@ -91,8 +97,13 @@ class Optimizer(FlameSchema):
 
 
 class BaseModel(FlameSchema):
+<<<<<<< HEAD
     name: str = Field(default="")
     version: int = Field(default=0)
+=======
+    name: str
+    version: int
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
 
 class Hyperparameters(FlameSchema):
@@ -100,7 +111,10 @@ class Hyperparameters(FlameSchema):
     learning_rate: t.Optional[float] = Field(alias="learningRate")
     rounds: int
     epochs: int
+<<<<<<< HEAD
     aggregation_goal: t.Optional[int] = Field(alias="aggGoal", default=None)
+=======
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
 
 class Groups(FlameSchema):
@@ -125,9 +139,15 @@ class GroupBy(FlameSchema):
         for entry in self.value:
             # check if an entry is a prefix of realm in a '/'-separated
             # fashion; if so, then return the matching entry
+<<<<<<< HEAD
             if realm.startswith(entry) and (len(realm) == len(entry)
                                             or realm[len(entry)]
                                             == REALM_SEPARATOR):
+=======
+            if realm.startswith(entry) and (
+                len(realm) == len(entry) or realm[len(entry)] == REALM_SEPARATOR
+            ):
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
                 return entry
 
         return GROUPBY_DEFAULT_GROUP
@@ -142,7 +162,11 @@ class Channel(FlameSchema):
     pair: list[str] = Field(min_length=2)
     is_bidirectional: t.Optional[bool] = Field(default=True)
     group_by: t.Optional[GroupBy] = Field(default=GroupBy())
+<<<<<<< HEAD
     func_tags: dict = Field(default={}, alias="func_tags")
+=======
+    func_tags: dict = Field(default={}, alias="funcTags")
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
     description: t.Optional[str]
 
 
@@ -151,6 +175,7 @@ class ChannelConfigs(FlameSchema):
     channel_brokers: dict = Field(default={})
 
 
+<<<<<<< HEAD
 class Config(FlameSchema):
 
     def __init__(self, config_path: str):
@@ -159,12 +184,24 @@ class Config(FlameSchema):
 
         super().__init__(**transformed_config)
 
+=======
+class Model(FlameSchema):
+    base_model: BaseModel
+    optimizer: t.Optional[Optimizer] = Field(default=Optimizer())
+    selector: Selector
+    hyperparameters: Hyperparameters
+    dependencies: list[str]
+
+
+class Config(FlameSchema):
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
     role: str
     realm: str
     task: t.Optional[str] = Field(default="local")
     task_id: str
     backend: BackendType
     channels: dict
+<<<<<<< HEAD
     hyperparameters: Hyperparameters
     brokers: Broker
     job: Job
@@ -177,6 +214,16 @@ class Config(FlameSchema):
     base_model: BaseModel
     groups: t.Optional[Groups]
     dependencies: list[str]
+=======
+    brokers: Broker
+    job: Job
+    model: Model
+    registry: Registry
+    channel_configs: t.Optional[ChannelConfigs]
+    dataset: str
+    max_run_time: int
+    groups: t.Optional[Groups]
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
     func_tag_map: t.Optional[dict]
 
 
@@ -185,7 +232,12 @@ def read_config(filename: str) -> dict:
         return json.loads(f.read())
 
 
+<<<<<<< HEAD
 def transform_config(raw_config: dict) -> dict:
+=======
+def load_config(filename: str) -> Config:
+    raw_config = read_config(filename)
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
     config_data = {
         "role": raw_config["role"],
         "realm": raw_config["realm"],
@@ -198,6 +250,7 @@ def transform_config(raw_config: dict) -> dict:
             "task": raw_config["task"],
         }
 
+<<<<<<< HEAD
     channels, func_tag_map = transform_channels(config_data["role"],
                                                 raw_config["channels"])
     config_data = config_data | {
@@ -208,12 +261,23 @@ def transform_config(raw_config: dict) -> dict:
     hyperparameters = transform_hyperparameters(raw_config["hyperparameters"])
     config_data = config_data | {"hyperparameters": hyperparameters}
 
+=======
+    channels, func_tag_map = transform_channels(
+        config_data["role"], raw_config["channels"]
+    )
+    config_data = config_data | {
+        "channels": channels,
+        "func_tag_map": func_tag_map,
+    }
+
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
     sort_to_host = transform_brokers(raw_config["brokers"])
     config_data = config_data | {"brokers": sort_to_host}
 
     config_data = config_data | {
         "job": raw_config["job"],
         "registry": raw_config["registry"],
+<<<<<<< HEAD
         "selector": raw_config["selector"],
     }
 
@@ -226,27 +290,70 @@ def transform_config(raw_config: dict) -> dict:
         "channel_configs": {
             "backends": backends,
             "channel_brokers": channel_brokers
+=======
+    }
+
+    backends, channel_brokers = transform_channel_configs(
+        raw_config.get("channelConfigs", {})
+    )
+    config_data = config_data | {
+        "channel_configs": {
+            "backends": backends,
+            "channel_brokers": channel_brokers,
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
         }
     }
 
     config_data = config_data | {
         "dataset": raw_config.get("dataset", ""),
         "max_run_time": raw_config.get("maxRunTime", 300),
+<<<<<<< HEAD
         "base_model": raw_config.get("baseModel", None),
         "dependencies": raw_config.get("dependencies", None),
     }
 
     return config_data
+=======
+    }
+
+    config_data = config_data | {
+        "model": transform_model(raw_config["modelSpec"])
+    }
+
+    return Config(**config_data)
+
+
+def transform_model(raw_model_config: dict):
+    base_model = raw_model_config["baseModel"]
+    optimizer = raw_model_config.get("optimizer", {})
+    selector = raw_model_config["selector"]
+    hyperparameters = transform_hyperparameters(
+        raw_model_config["hyperparameters"]
+    )
+    dependencies = raw_model_config.get("dependencies", [])
+
+    return {
+        "base_model": base_model,
+        "optimizer": optimizer,
+        "selector": selector,
+        "hyperparameters": hyperparameters,
+        "dependencies": dependencies,
+    }
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
 
 def transform_channel(raw_channel_config: dict):
     name = raw_channel_config["name"]
     pair = raw_channel_config["pair"]
     is_bidirectional = raw_channel_config.get("isBidirectional", True)
+<<<<<<< HEAD
     group_by = {
         "type": "",
         "value": []
     } | raw_channel_config.get("groupBy", {})
+=======
+    group_by = {"type": "", "value": []} | raw_channel_config.get("groupBy", {})
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
     func_tags = raw_channel_config.get("funcTags", {})
     description = raw_channel_config.get("description", "")
 

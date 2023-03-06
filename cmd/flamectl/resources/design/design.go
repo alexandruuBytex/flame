@@ -48,6 +48,7 @@ func Create(params Params) error {
 	//Encode the data
 	postBody := openapi.DesignInfo{
 		Id:          params.DesignId,
+		Name:        params.User,
 		Description: params.Desc,
 	}
 
@@ -55,7 +56,12 @@ func Create(params Params) error {
 	code, responseBody, err := restapi.HTTPPost(url, postBody, "application/json")
 	if err != nil || restapi.CheckStatusCode(code) != nil {
 		var msg string
-		_ = json.Unmarshal(responseBody, &msg)
+		err = json.Unmarshal(responseBody, &msg)
+
+		if err != nil {
+			fmt.Printf("Failed to unmarshal response body! Error: %s", err.Error())
+			return nil
+		}
 		fmt.Printf("Failed to create a new design - code: %d; %s\n", code, msg)
 		return nil
 	}

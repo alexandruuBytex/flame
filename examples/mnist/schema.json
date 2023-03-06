@@ -1,6 +1,10 @@
 {
     "name": "A simple example schema v1.0.0",
     "description": "a sample schema to demonstrate a TAG layout",
+<<<<<<< HEAD
+=======
+    "version": "1",
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
     "roles": [
         {
             "name": "trainer",

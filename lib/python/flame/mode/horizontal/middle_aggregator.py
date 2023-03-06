@@ -23,6 +23,7 @@ from diskcache import Cache
 
 from ...channel_manager import ChannelManager
 from ...common.custom_abcmeta import ABCMeta, abstract_attribute
+from ...config import Config
 from ...optimizer.train_result import TrainResult
 from ...optimizers import optimizer_provider
 from ...plugin import PluginManager
@@ -34,10 +35,10 @@ from ...config import Config
 
 logger = logging.getLogger(__name__)
 
-TAG_DISTRIBUTE = 'distribute'
-TAG_AGGREGATE = 'aggregate'
-TAG_FETCH = 'fetch'
-TAG_UPLOAD = 'upload'
+TAG_DISTRIBUTE = "distribute"
+TAG_AGGREGATE = "aggregate"
+TAG_FETCH = "fetch"
+TAG_UPLOAD = "upload"
 
 # 60 second wait time until a trainer appears in a channel
 WAIT_TIME_FOR_TRAINER = 60
@@ -62,8 +63,10 @@ class MiddleAggregator(Role, metaclass=ABCMeta):
         self.cm(self.config)
         self.cm.join_all()
 
-        self.optimizer = optimizer_provider.get(self.config.optimizer.sort,
-                                                **self.config.optimizer.kwargs)
+        self.optimizer = optimizer_provider.get(
+            self.config.model.optimizer.sort,
+            **self.config.model.optimizer.kwargs,
+        )
 
         self._round = 1
         self._work_done = False
@@ -127,10 +130,13 @@ class MiddleAggregator(Role, metaclass=ABCMeta):
 
         for end in channel.ends():
             logger.debug(f"sending weights to {end}")
-            channel.send(end, {
-                MessageType.WEIGHTS: self.weights,
-                MessageType.ROUND: self._round
-            })
+            channel.send(
+                end,
+                {
+                    MessageType.WEIGHTS: self.weights,
+                    MessageType.ROUND: self._round,
+                },
+            )
 
     def _aggregate_weights(self, tag: str) -> None:
         channel = self.cm.get_by_tag(tag)
@@ -185,10 +191,12 @@ class MiddleAggregator(Role, metaclass=ABCMeta):
         end = channel.one_end()
 
         channel.send(
-            end, {
+            end,
+            {
                 MessageType.WEIGHTS: self.weights,
-                MessageType.DATASET_SIZE: self.dataset_size
-            })
+                MessageType.DATASET_SIZE: self.dataset_size,
+            },
+        )
         logger.debug("sending weights done")
 
     def _send_dummy_weights(self, tag: str) -> None:
@@ -258,9 +266,20 @@ class MiddleAggregator(Role, metaclass=ABCMeta):
 
         # create a loop object with loop exit condition function
         loop = Loop(loop_check_fn=lambda: self._work_done)
-        task_internal_init >> task_load_data >> task_init >> loop(
-            task_get_fetch >> task_put_dist >> task_get_aggr >> task_put_upload
-            >> task_eval >> task_update_round) >> task_end_of_training
+        (
+            task_internal_init
+            >> task_load_data
+            >> task_init
+            >> loop(
+                task_get_fetch
+                >> task_put_dist
+                >> task_get_aggr
+                >> task_put_upload
+                >> task_eval
+                >> task_update_round
+            )
+            >> task_end_of_training
+        )
 
     def run(self) -> None:
         """Run role."""
@@ -268,5 +287,7 @@ class MiddleAggregator(Role, metaclass=ABCMeta):
 
     @classmethod
     def get_func_tags(cls) -> list[str]:
-        """Return a list of function tags defined in the middle level aggregator role."""
+        """Return a list of function tags defined in the middle level
+        aggregator role.
+        """
         return [TAG_DISTRIBUTE, TAG_AGGREGATE, TAG_FETCH, TAG_UPLOAD]

@@ -39,9 +39,13 @@ setup(
         'mlflow==2.0.1',
         'paho-mqtt',
         'protobuf==3.19.5',
+<<<<<<< HEAD
         'grpcio==1.51.1',
         'pydantic',
         'grpcio==1.51.1',
+=======
+        'pydantic',
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
     ],
     extras_require={
         'dev': [

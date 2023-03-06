@@ -20,7 +20,7 @@ from random import randrange
 from statistics import mean
 
 import numpy as np
-from flame.config import Config
+from flame.config import Config, load_config
 from flame.mode.horizontal.trainer import Trainer
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -45,25 +45,34 @@ class KerasMnistTrainer(Trainer):
         self._x_test = None
         self._y_test = None
 
+<<<<<<< HEAD
         self.epochs = self.config.hyperparameters.epochs
         self.batch_size = self.config.hyperparameters.batch_size or 128
+=======
+        self.epochs = self.config.model.hyperparameters.epochs
+        self.batch_size = self.config.model.hyperparameters.batch_size or 128
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
     def initialize(self) -> None:
         """Initialize role."""
-        model = keras.Sequential([
-            keras.Input(shape=self.input_shape),
-            layers.Conv2D(32, kernel_size=(3, 3), activation="relu"),
-            layers.MaxPooling2D(pool_size=(2, 2)),
-            layers.Conv2D(64, kernel_size=(3, 3), activation="relu"),
-            layers.MaxPooling2D(pool_size=(2, 2)),
-            layers.Flatten(),
-            layers.Dropout(0.5),
-            layers.Dense(self.num_classes, activation="softmax"),
-        ])
+        model = keras.Sequential(
+            [
+                keras.Input(shape=self.input_shape),
+                layers.Conv2D(32, kernel_size=(3, 3), activation="relu"),
+                layers.MaxPooling2D(pool_size=(2, 2)),
+                layers.Conv2D(64, kernel_size=(3, 3), activation="relu"),
+                layers.MaxPooling2D(pool_size=(2, 2)),
+                layers.Flatten(),
+                layers.Dropout(0.5),
+                layers.Dense(self.num_classes, activation="softmax"),
+            ]
+        )
 
-        model.compile(loss="categorical_crossentropy",
-                      optimizer="adam",
-                      metrics=["accuracy"])
+        model.compile(
+            loss="categorical_crossentropy",
+            optimizer="adam",
+            metrics=["accuracy"],
+        )
 
         self.model = model
 
@@ -98,11 +107,13 @@ class KerasMnistTrainer(Trainer):
 
     def train(self) -> None:
         """Train a model."""
-        history = self.model.fit(self._x_train,
-                                 self._y_train,
-                                 batch_size=self.batch_size,
-                                 epochs=self.epochs,
-                                 validation_split=0.1)
+        history = self.model.fit(
+            self._x_train,
+            self._y_train,
+            batch_size=self.batch_size,
+            epochs=self.epochs,
+            validation_split=0.1,
+        )
 
         # save dataset size so that the info can be shared with aggregator
         self.dataset_size = len(self._x_train)
@@ -131,7 +142,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config(args.config)
+    config = load_config(args.config)
 
     t = KerasMnistTrainer(config)
     t.compose()

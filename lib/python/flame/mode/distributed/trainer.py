@@ -22,11 +22,21 @@ from copy import deepcopy
 
 from ...channel_manager import ChannelManager
 from ...common.custom_abcmeta import ABCMeta, abstract_attribute
+<<<<<<< HEAD
 from ...common.util import (MLFramework, delta_weights_pytorch,
                             delta_weights_tensorflow, get_ml_framework_in_use,
                             mlflow_runname, valid_frameworks,
                             weights_to_device, weights_to_model_device)
 from ...common.constants import DeviceType
+=======
+from ...common.util import (
+    MLFramework,
+    get_ml_framework_in_use,
+    mlflow_runname,
+    valid_frameworks,
+)
+from ...config import Config
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 from ...registries import registry_provider
 from ..composer import Composer
 from ..message import MessageType
@@ -36,7 +46,7 @@ from ...config import Config
 
 logger = logging.getLogger(__name__)
 
-TAG_RING_ALLREDUCE = 'ring_allreduce'
+TAG_RING_ALLREDUCE = "ring_allreduce"
 
 
 class Trainer(Role, metaclass=ABCMeta):
@@ -66,7 +76,7 @@ class Trainer(Role, metaclass=ABCMeta):
         # initialize registry client
         self.registry_client(self.config.registry.uri, self.config.job.job_id)
 
-        base_model = self.config.base_model
+        base_model = self.config.model.base_model
         if base_model and base_model.name != "" and base_model.version > 0:
             self.model = self.registry_client.load_model(
                 base_model.name, base_model.version)
@@ -78,7 +88,11 @@ class Trainer(Role, metaclass=ABCMeta):
 
         self._round = 1
 
+<<<<<<< HEAD
         self._rounds = self.config.hyperparameters.rounds
+=======
+        self._rounds = self.config.model.hyperparameters.rounds
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
         self._work_done = False
 
         self.is_committer = False
@@ -283,7 +297,12 @@ class Trainer(Role, metaclass=ABCMeta):
 
     """END: tensorflow functions"""
 
-    def _handle_member_check(self, channel, end, digest) -> tuple[bool, int]:
+    def _handle_member_check(  # noqa: C901
+        self,
+        channel,
+        end,
+        digest,
+    ) -> tuple[bool, int]:
         """Handle member check message.
 
         Returns
@@ -329,7 +348,11 @@ class Trainer(Role, metaclass=ABCMeta):
                     MessageType.DATASET_SIZE: self.dataset_size,
                     MessageType.ROUND: self._round,
                     MessageType.IS_COMMITTER: self.is_committer,
+<<<<<<< HEAD
                     MessageType.RING_WEIGHTS: weights_to_device(self.ring_weights, DeviceType.CPU)
+=======
+                    MessageType.RING_WEIGHTS: self.ring_weights,
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
                 }
                 channel.send(end, ring_weights_msg)
 
@@ -367,7 +390,7 @@ class Trainer(Role, metaclass=ABCMeta):
             MessageType.MEMBER_DIGEST: digest,
             MessageType.DATASET_SIZE: self.dataset_size,
             MessageType.ROUND: self._round,
-            MessageType.IS_COMMITTER: self.is_committer
+            MessageType.IS_COMMITTER: self.is_committer,
         }
 
         if self.ring_weights is None:
@@ -394,7 +417,7 @@ class Trainer(Role, metaclass=ABCMeta):
 
         # check if work is done by others
         # if work is done, then no further distributed learning needed
-        self._work_done = (self._round > self._rounds)
+        self._work_done = self._round > self._rounds
         if self._work_done:
             return
 
@@ -449,7 +472,7 @@ class Trainer(Role, metaclass=ABCMeta):
         logger.debug(f"Total rounds: {self._rounds}")
 
         self._round += 1
-        self._work_done = (self._round > self._rounds)
+        self._work_done = self._round > self._rounds
 
         channel = self.cm.get_by_tag(TAG_RING_ALLREDUCE)
         if not channel:
@@ -462,8 +485,8 @@ class Trainer(Role, metaclass=ABCMeta):
     def save_params(self):
         """Save hyperparamets in a model registry."""
         logger.debug(f"saving params: is_committer: {self.is_committer}")
-        if self.config.hyperparameters and self.is_committer:
-            self.registry_client.save_params(self.config.hyperparameters)
+        if self.config.model.hyperparameters and self.is_committer:
+            self.registry_client.save_params(self.config.model.hyperparameters)
 
     def save_model(self):
         """Save model in a model registry."""
@@ -501,9 +524,27 @@ class Trainer(Role, metaclass=ABCMeta):
 
             # create a loop object with loop exit condition function
             loop = Loop(loop_check_fn=lambda: self._work_done)
+<<<<<<< HEAD
             task_init_cm >> task_internal_init >> task_load_data >> task_init >> loop(
                 task_train >> task_allreduce >> task_eval >> task_save_metrics
                 >> task_increment_round) >> task_save_params >> task_save_model
+=======
+            (
+                task_init_cm
+                >> task_internal_init
+                >> task_load_data
+                >> task_init
+                >> loop(
+                    task_train
+                    >> task_allreduce
+                    >> task_eval
+                    >> task_save_metrics
+                    >> task_increment_round
+                )
+                >> task_save_params
+                >> task_save_model
+            )
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
     def run(self) -> None:
         """Run role."""

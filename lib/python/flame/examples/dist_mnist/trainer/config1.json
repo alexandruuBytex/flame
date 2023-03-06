@@ -51,8 +51,13 @@
         "name": "dist_mnist"
     },
     "registry": {
+<<<<<<< HEAD
 	"sort": "dummy",
 	"uri": ""
+=======
+        "sort": "mlflow",
+        "uri": "http://mlflow.flame.test"
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
     },
     "selector": {
         "sort": "default",

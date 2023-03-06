@@ -26,7 +26,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import torch.utils.data as data_utils
-from flame.config import Config
+from flame.config import Config, load_config
 from flame.mode.distributed.trainer import Trainer
 from torchvision import datasets, transforms
 
@@ -75,34 +75,37 @@ class PyTorchMnistTrainer(Trainer):
         self.device = None
         self.train_loader = None
 
+<<<<<<< HEAD
         self.epochs = self.config.hyperparameters.epochs
         self.batch_size = self.config.hyperparameters.batch_size or 16
+=======
+        self.epochs = self.config.model.hyperparameters.epochs
+        self.batch_size = self.config.model.hyperparameters.batch_size or 16
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
     def initialize(self) -> None:
         """Initialize role."""
         self.device = torch.device(
-            "cuda" if torch.cuda.is_available() else "cpu")
+            "cuda" if torch.cuda.is_available() else "cpu"
+        )
 
         self.model = Net().to(self.device)
 
     def load_data(self) -> None:
         """Load data."""
-        transform = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.1307, ), (0.3081, ))
-        ])
+        transform = transforms.Compose(
+            [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
+        )
 
-        dataset = datasets.MNIST('./data',
-                                 train=True,
-                                 download=True,
-                                 transform=transform)
+        dataset = datasets.MNIST(
+            './data', train=True, download=True, transform=transform
+        )
 
         indices = torch.arange(400)
         dataset = data_utils.Subset(dataset, indices)
         train_kwargs = {'batch_size': self.batch_size}
 
-        self.train_loader = torch.utils.data.DataLoader(
-            dataset, **train_kwargs)
+        self.train_loader = torch.utils.data.DataLoader(dataset, **train_kwargs)
 
     def train(self) -> None:
         """Train a model."""
@@ -127,9 +130,11 @@ class PyTorchMnistTrainer(Trainer):
             if batch_idx % 10 == 0:
                 done = batch_idx * len(data)
                 total = len(self.train_loader.dataset)
-                percent = 100. * batch_idx / len(self.train_loader)
-                logger.info(f"epoch: {epoch} [{done}/{total} ({percent:.0f}%)]"
-                            f"\tloss: {loss.item():.6f}")
+                percent = 100.0 * batch_idx / len(self.train_loader)
+                logger.info(
+                    f"epoch: {epoch} [{done}/{total} ({percent:.0f}%)]"
+                    f"\tloss: {loss.item():.6f}"
+                )
 
     def evaluate(self) -> None:
         """Evaluate a model."""
@@ -145,7 +150,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config(args.config)
+    config = load_config(args.config)
 
     t = PyTorchMnistTrainer(config)
     t.compose()
