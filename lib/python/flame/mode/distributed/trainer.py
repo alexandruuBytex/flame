@@ -32,11 +32,10 @@ from ..composer import Composer
 from ..message import MessageType
 from ..role import Role
 from ..tasklet import Loop, Tasklet
-from ...config import Config
 
 logger = logging.getLogger(__name__)
 
-TAG_RING_ALLREDUCE = 'ring_allreduce'
+TAG_RING_ALLREDUCE = "ring_allreduce"
 
 
 class Trainer(Role, metaclass=ABCMeta):
@@ -66,7 +65,7 @@ class Trainer(Role, metaclass=ABCMeta):
         # initialize registry client
         self.registry_client(self.config.registry.uri, self.config.job.job_id)
 
-        base_model = self.config.base_model
+        base_model = self.config.model.base_model
         if base_model and base_model.name != "" and base_model.version > 0:
             self.model = self.registry_client.load_model(
                 base_model.name, base_model.version)
@@ -283,7 +282,12 @@ class Trainer(Role, metaclass=ABCMeta):
 
     """END: tensorflow functions"""
 
-    def _handle_member_check(self, channel, end, digest) -> tuple[bool, int]:
+    def _handle_member_check(  # noqa: C901
+        self,
+        channel,
+        end,
+        digest,
+    ) -> tuple[bool, int]:
         """Handle member check message.
 
         Returns
@@ -367,7 +371,7 @@ class Trainer(Role, metaclass=ABCMeta):
             MessageType.MEMBER_DIGEST: digest,
             MessageType.DATASET_SIZE: self.dataset_size,
             MessageType.ROUND: self._round,
-            MessageType.IS_COMMITTER: self.is_committer
+            MessageType.IS_COMMITTER: self.is_committer,
         }
 
         if self.ring_weights is None:
@@ -394,7 +398,7 @@ class Trainer(Role, metaclass=ABCMeta):
 
         # check if work is done by others
         # if work is done, then no further distributed learning needed
-        self._work_done = (self._round > self._rounds)
+        self._work_done = self._round > self._rounds
         if self._work_done:
             return
 
@@ -449,7 +453,7 @@ class Trainer(Role, metaclass=ABCMeta):
         logger.debug(f"Total rounds: {self._rounds}")
 
         self._round += 1
-        self._work_done = (self._round > self._rounds)
+        self._work_done = self._round > self._rounds
 
         channel = self.cm.get_by_tag(TAG_RING_ALLREDUCE)
         if not channel:
