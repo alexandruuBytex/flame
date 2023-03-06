@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> b9285ae (Updates)
 // Copyright 2023 Cisco Systems, Inc. and its affiliates
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +14,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-<<<<<<< HEAD
-=======
->>>>>>> cc8e286 (Sync up the generated code from openapi generator with what we have currently (#331))
-=======
->>>>>>> b9285ae (Updates)
 package constants
 
 const (
