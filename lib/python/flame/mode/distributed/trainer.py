@@ -22,13 +22,6 @@ from copy import deepcopy
 
 from ...channel_manager import ChannelManager
 from ...common.custom_abcmeta import ABCMeta, abstract_attribute
-<<<<<<< HEAD
-from ...common.util import (MLFramework, delta_weights_pytorch,
-                            delta_weights_tensorflow, get_ml_framework_in_use,
-                            mlflow_runname, valid_frameworks,
-                            weights_to_device, weights_to_model_device)
-from ...common.constants import DeviceType
-=======
 from ...common.util import (
     MLFramework,
     get_ml_framework_in_use,
@@ -36,12 +29,12 @@ from ...common.util import (
     valid_frameworks,
 )
 from ...config import Config
->>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 from ...registries import registry_provider
 from ..composer import Composer
 from ..message import MessageType
 from ..role import Role
 from ..tasklet import Loop, Tasklet
+from ...config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +81,7 @@ class Trainer(Role, metaclass=ABCMeta):
         self._round = 1
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         self._rounds = self.config.model.hyperparameters.rounds
 =======
 <<<<<<< HEAD
@@ -96,6 +90,9 @@ class Trainer(Role, metaclass=ABCMeta):
         self._rounds = self.config.model.hyperparameters.rounds
 >>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 >>>>>>> 97c8fd08ddb0df794e637bd5a8cd7ca2648b34e0
+=======
+        self._rounds = self.config.hyperparameters.rounds
+>>>>>>> 8332efdee71173043e12ac588b12d9079e48b0b7
         self._work_done = False
 
         self.is_committer = False
@@ -351,11 +348,7 @@ class Trainer(Role, metaclass=ABCMeta):
                     MessageType.DATASET_SIZE: self.dataset_size,
                     MessageType.ROUND: self._round,
                     MessageType.IS_COMMITTER: self.is_committer,
-<<<<<<< HEAD
-                    MessageType.RING_WEIGHTS: weights_to_device(self.ring_weights, DeviceType.CPU)
-=======
                     MessageType.RING_WEIGHTS: self.ring_weights,
->>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
                 }
                 channel.send(end, ring_weights_msg)
 

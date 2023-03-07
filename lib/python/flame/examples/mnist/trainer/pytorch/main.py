@@ -28,6 +28,8 @@ import torch.optim as optim
 import torch.utils.data as data_utils
 from flame.config import Config, load_config
 from flame.mode.horizontal.trainer import Trainer
+
+
 from torchvision import datasets, transforms
 
 logger = logging.getLogger(__name__)
@@ -75,18 +77,8 @@ class PyTorchMnistTrainer(Trainer):
         self.device = None
         self.train_loader = None
 
-<<<<<<< HEAD
-        self.epochs = self.config.model.hyperparameters.epochs
-        self.batch_size = self.config.model.hyperparameters.batch_size or 16
-=======
-<<<<<<< HEAD
         self.epochs = self.config.hyperparameters.epochs
         self.batch_size = self.config.hyperparameters.batch_size or 16
-=======
-        self.epochs = self.config.model.hyperparameters.epochs
-        self.batch_size = self.config.model.hyperparameters.batch_size or 16
->>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
->>>>>>> 97c8fd08ddb0df794e637bd5a8cd7ca2648b34e0
 
     def initialize(self) -> None:
         """Initialize role."""
@@ -155,10 +147,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 <<<<<<< HEAD
 >>>>>>> 97c8fd08ddb0df794e637bd5a8cd7ca2648b34e0
+=======
+>>>>>>> 8332efdee71173043e12ac588b12d9079e48b0b7
     config = Config(args.config)
 =======
     config = load_config(args.config)

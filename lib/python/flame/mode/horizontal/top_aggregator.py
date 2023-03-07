@@ -23,12 +23,6 @@ from diskcache import Cache
 
 from ...channel_manager import ChannelManager
 from ...common.custom_abcmeta import ABCMeta, abstract_attribute
-<<<<<<< HEAD
-from ...common.util import (MLFramework, get_ml_framework_in_use,
-                            mlflow_runname, valid_frameworks,
-                            weights_to_device, weights_to_model_device)
-from ...common.constants import DeviceType
-=======
 from ...common.util import (
     MLFramework,
     get_ml_framework_in_use,
@@ -36,7 +30,6 @@ from ...common.util import (
     valid_frameworks,
 )
 from ...config import Config
->>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 from ...optimizer.train_result import TrainResult
 from ...optimizers import optimizer_provider
 from ...plugin import PluginManager, PluginType
@@ -45,6 +38,7 @@ from ..composer import Composer
 from ..message import MessageType
 from ..role import Role
 from ..tasklet import Loop, Tasklet
+from ...config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -103,6 +97,7 @@ class TopAggregator(Role, metaclass=ABCMeta):
         self._round = 1
         self._rounds = 1
 <<<<<<< HEAD
+<<<<<<< HEAD
         self._rounds = self.config.model.hyperparameters.rounds
 =======
 <<<<<<< HEAD
@@ -111,6 +106,9 @@ class TopAggregator(Role, metaclass=ABCMeta):
         self._rounds = self.config.model.hyperparameters.rounds
 >>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 >>>>>>> 97c8fd08ddb0df794e637bd5a8cd7ca2648b34e0
+=======
+        self._rounds = self.config.hyperparameters.rounds
+>>>>>>> 8332efdee71173043e12ac588b12d9079e48b0b7
         self._work_done = False
 
         self.framework = get_ml_framework_in_use()
