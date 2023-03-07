@@ -60,10 +60,8 @@
         "uri": "http://flame-mlflow:5000"
     },
     "selector": {
-        "sort": "random",
-        "kwargs": {
-            "k": 1
-        }
+        "sort": "mlflow",
+        "uri": "http://flame-mlflow:5000"
     },
     "maxRunTime": 300,
     "realm": "default/uk/london/org2/machine1",

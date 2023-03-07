@@ -75,8 +75,18 @@ class PyTorchMnistTrainer(Trainer):
         self.device = None
         self.train_loader = None
 
+<<<<<<< HEAD
         self.epochs = self.config.model.hyperparameters.epochs
         self.batch_size = self.config.model.hyperparameters.batch_size or 16
+=======
+<<<<<<< HEAD
+        self.epochs = self.config.hyperparameters.epochs
+        self.batch_size = self.config.hyperparameters.batch_size or 16
+=======
+        self.epochs = self.config.model.hyperparameters.epochs
+        self.batch_size = self.config.model.hyperparameters.batch_size or 16
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
+>>>>>>> 97c8fd08ddb0df794e637bd5a8cd7ca2648b34e0
 
     def initialize(self) -> None:
         """Initialize role."""
@@ -144,8 +154,15 @@ if __name__ == "__main__":
     parser.add_argument('config', nargs='?', default="./config.json")
 
     args = parser.parse_args()
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+>>>>>>> 97c8fd08ddb0df794e637bd5a8cd7ca2648b34e0
     config = Config(args.config)
+=======
+    config = load_config(args.config)
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
     t = PyTorchMnistTrainer(config)
     t.compose()

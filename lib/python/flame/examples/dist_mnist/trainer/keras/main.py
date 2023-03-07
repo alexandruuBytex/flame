@@ -46,8 +46,8 @@ class KerasMnistTrainer(Trainer):
         self._x_test = None
         self._y_test = None
 
-        self.epochs = self.config.model.hyperparameters.epochs
-        self.batch_size = self.config.model.hyperparameters.batch_size or 128
+        self.epochs = self.config.hyperparameters.epochs
+        self.batch_size = self.config.hyperparameters.batch_size or 128
 
     def initialize(self) -> None:
         """Initialize role."""

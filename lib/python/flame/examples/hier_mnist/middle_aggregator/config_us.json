@@ -84,10 +84,6 @@
         "uri": "http://flame-mlflow:5000"
     },
     "selector": {
-        "sort": "random",
-        "kwargs": {
-            "k": 1
-        }
     },
     "maxRunTime": 300,
     "realm": "default/us/west/org1/flame",

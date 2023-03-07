@@ -22,11 +22,21 @@ from copy import deepcopy
 
 from ...channel_manager import ChannelManager
 from ...common.custom_abcmeta import ABCMeta, abstract_attribute
+<<<<<<< HEAD
 from ...common.util import (MLFramework, delta_weights_pytorch,
                             delta_weights_tensorflow, get_ml_framework_in_use,
                             mlflow_runname, valid_frameworks,
                             weights_to_device, weights_to_model_device)
 from ...common.constants import DeviceType
+=======
+from ...common.util import (
+    MLFramework,
+    get_ml_framework_in_use,
+    mlflow_runname,
+    valid_frameworks,
+)
+from ...config import Config
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 from ...registries import registry_provider
 from ..composer import Composer
 from ..message import MessageType
@@ -77,7 +87,15 @@ class Trainer(Role, metaclass=ABCMeta):
 
         self._round = 1
 
+<<<<<<< HEAD
         self._rounds = self.config.model.hyperparameters.rounds
+=======
+<<<<<<< HEAD
+        self._rounds = self.config.hyperparameters.rounds
+=======
+        self._rounds = self.config.model.hyperparameters.rounds
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
+>>>>>>> 97c8fd08ddb0df794e637bd5a8cd7ca2648b34e0
         self._work_done = False
 
         self.is_committer = False
@@ -333,7 +351,11 @@ class Trainer(Role, metaclass=ABCMeta):
                     MessageType.DATASET_SIZE: self.dataset_size,
                     MessageType.ROUND: self._round,
                     MessageType.IS_COMMITTER: self.is_committer,
+<<<<<<< HEAD
                     MessageType.RING_WEIGHTS: weights_to_device(self.ring_weights, DeviceType.CPU)
+=======
+                    MessageType.RING_WEIGHTS: self.ring_weights,
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
                 }
                 channel.send(end, ring_weights_msg)
 
@@ -505,9 +527,27 @@ class Trainer(Role, metaclass=ABCMeta):
 
             # create a loop object with loop exit condition function
             loop = Loop(loop_check_fn=lambda: self._work_done)
+<<<<<<< HEAD
             task_init_cm >> task_internal_init >> task_load_data >> task_init >> loop(
                 task_train >> task_allreduce >> task_eval >> task_save_metrics
                 >> task_increment_round) >> task_save_params >> task_save_model
+=======
+            (
+                task_init_cm
+                >> task_internal_init
+                >> task_load_data
+                >> task_init
+                >> loop(
+                    task_train
+                    >> task_allreduce
+                    >> task_eval
+                    >> task_save_metrics
+                    >> task_increment_round
+                )
+                >> task_save_params
+                >> task_save_model
+            )
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
     def run(self) -> None:
         """Run role."""

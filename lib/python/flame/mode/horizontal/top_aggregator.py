@@ -23,10 +23,20 @@ from diskcache import Cache
 
 from ...channel_manager import ChannelManager
 from ...common.custom_abcmeta import ABCMeta, abstract_attribute
+<<<<<<< HEAD
 from ...common.util import (MLFramework, get_ml_framework_in_use,
                             mlflow_runname, valid_frameworks,
                             weights_to_device, weights_to_model_device)
 from ...common.constants import DeviceType
+=======
+from ...common.util import (
+    MLFramework,
+    get_ml_framework_in_use,
+    mlflow_runname,
+    valid_frameworks,
+)
+from ...config import Config
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 from ...optimizer.train_result import TrainResult
 from ...optimizers import optimizer_provider
 from ...plugin import PluginManager, PluginType
@@ -92,7 +102,15 @@ class TopAggregator(Role, metaclass=ABCMeta):
 
         self._round = 1
         self._rounds = 1
+<<<<<<< HEAD
         self._rounds = self.config.model.hyperparameters.rounds
+=======
+<<<<<<< HEAD
+        self._rounds = self.config.hyperparameters.rounds
+=======
+        self._rounds = self.config.model.hyperparameters.rounds
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
+>>>>>>> 97c8fd08ddb0df794e637bd5a8cd7ca2648b34e0
         self._work_done = False
 
         self.framework = get_ml_framework_in_use()
@@ -170,10 +188,20 @@ class TopAggregator(Role, metaclass=ABCMeta):
         # send out global model parameters to trainers
         for end in channel.ends():
             logger.debug(f"sending weights to {end}")
+<<<<<<< HEAD
             channel.send(end, {
                 MessageType.WEIGHTS: weights_to_device(self.weights, DeviceType.CPU),
                 MessageType.ROUND: self._round
             })
+=======
+            channel.send(
+                end,
+                {
+                    MessageType.WEIGHTS: self.weights,
+                    MessageType.ROUND: self._round,
+                },
+            )
+>>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
     def inform_end_of_training(self) -> None:
         """Inform all the trainers that the training is finished."""
