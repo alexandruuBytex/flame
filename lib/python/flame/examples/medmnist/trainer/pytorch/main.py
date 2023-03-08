@@ -109,31 +109,10 @@ class PyTorchMedMNistTrainer(Trainer):
         self.train_loader = None
         self.val_loader = None
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        self.epochs = self.config.model.hyperparameters.epochs
-        self.batch_size = self.config.model.hyperparameters.batch_size
-        self._round = 1
-        self._rounds = self.config.model.hyperparameters.rounds
-=======
-<<<<<<< HEAD:lib/python/flame/examples/medmnist/trainer/pytorch/main.py
         self.epochs = self.config.hyperparameters.epochs
         self.batch_size = self.config.hyperparameters.batch_size
         self._round = 1
         self._rounds = self.config.hyperparameters.rounds
-=======
-        self.epochs = self.config.model.hyperparameters.epochs
-        self.batch_size = self.config.model.hyperparameters.batch_size
-        self._round = 1
-        self._rounds = self.config.model.hyperparameters.rounds
->>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c:lib/python/flame/examples/medmnist/trainer/main.py
->>>>>>> 97c8fd08ddb0df794e637bd5a8cd7ca2648b34e0
-=======
-        self.epochs = self.config.hyperparameters.epochs
-        self.batch_size = self.config.hyperparameters.batch_size
-        self._round = 1
-        self._rounds = self.config.hyperparameters.rounds
->>>>>>> 8332efdee71173043e12ac588b12d9079e48b0b7
 
     def initialize(self) -> None:
         """Initialize role."""

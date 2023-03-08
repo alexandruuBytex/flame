@@ -146,18 +146,8 @@ if __name__ == "__main__":
     parser.add_argument('config', nargs='?', default="./config.json")
 
     args = parser.parse_args()
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
->>>>>>> 97c8fd08ddb0df794e637bd5a8cd7ca2648b34e0
-=======
->>>>>>> 8332efdee71173043e12ac588b12d9079e48b0b7
-    config = Config(args.config)
-=======
+    
     config = load_config(args.config)
->>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
     t = PyTorchMnistTrainer(config)
     t.compose()
