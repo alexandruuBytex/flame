@@ -23,13 +23,10 @@ from diskcache import Cache
 
 from ...channel_manager import ChannelManager
 from ...common.custom_abcmeta import ABCMeta, abstract_attribute
-from ...common.util import (
-    MLFramework,
-    get_ml_framework_in_use,
-    mlflow_runname,
-    valid_frameworks,
-)
-from ...config import Config
+from ...common.util import (MLFramework, get_ml_framework_in_use,
+                            mlflow_runname, valid_frameworks,
+                            weights_to_device, weights_to_model_device)
+from ...common.constants import DeviceType
 from ...optimizer.train_result import TrainResult
 from ...optimizers import optimizer_provider
 from ...plugin import PluginManager, PluginType
@@ -42,8 +39,8 @@ from ...config import Config
 
 logger = logging.getLogger(__name__)
 
-TAG_DISTRIBUTE = "distribute"
-TAG_AGGREGATE = "aggregate"
+TAG_DISTRIBUTE = 'distribute'
+TAG_AGGREGATE = 'aggregate'
 
 
 class TopAggregator(Role, metaclass=ABCMeta):
@@ -78,45 +75,29 @@ class TopAggregator(Role, metaclass=ABCMeta):
         # initialize registry client
         self.registry_client(self.config.registry.uri, self.config.job.job_id)
 
-        base_model = self.config.model.base_model
+        base_model = self.config.base_model
         if base_model and base_model.name != "" and base_model.version > 0:
             self.model = self.registry_client.load_model(
-                base_model.name, base_model.version
-            )
+                base_model.name, base_model.version)
 
         self.registry_client.setup_run(mlflow_runname(self.config))
         self.metrics = dict()
 
         # disk cache is used for saving memory in case model is large
         self.cache = Cache()
-        self.optimizer = optimizer_provider.get(
-            self.config.model.optimizer.sort,
-            **self.config.model.optimizer.kwargs,
-        )
+        self.optimizer = optimizer_provider.get(self.config.optimizer.sort,
+                                                **self.config.optimizer.kwargs)
 
         self._round = 1
         self._rounds = 1
-<<<<<<< HEAD
-<<<<<<< HEAD
-        self._rounds = self.config.model.hyperparameters.rounds
-=======
-<<<<<<< HEAD
         self._rounds = self.config.hyperparameters.rounds
-=======
-        self._rounds = self.config.model.hyperparameters.rounds
->>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
->>>>>>> 97c8fd08ddb0df794e637bd5a8cd7ca2648b34e0
-=======
-        self._rounds = self.config.hyperparameters.rounds
->>>>>>> 8332efdee71173043e12ac588b12d9079e48b0b7
         self._work_done = False
 
         self.framework = get_ml_framework_in_use()
         if self.framework == MLFramework.UNKNOWN:
             raise NotImplementedError(
                 "supported ml framework not found; "
-                f"supported frameworks are: {valid_frameworks}"
-            )
+                f"supported frameworks are: {valid_frameworks}")
 
     def get(self, tag: str) -> None:
         """Get data from remote role(s)."""
@@ -186,20 +167,10 @@ class TopAggregator(Role, metaclass=ABCMeta):
         # send out global model parameters to trainers
         for end in channel.ends():
             logger.debug(f"sending weights to {end}")
-<<<<<<< HEAD
             channel.send(end, {
                 MessageType.WEIGHTS: weights_to_device(self.weights, DeviceType.CPU),
                 MessageType.ROUND: self._round
             })
-=======
-            channel.send(
-                end,
-                {
-                    MessageType.WEIGHTS: self.weights,
-                    MessageType.ROUND: self._round,
-                },
-            )
->>>>>>> d161660e15d0be038af15bca301ef9e41e023a3c
 
     def inform_end_of_training(self) -> None:
         """Inform all the trainers that the training is finished."""
@@ -237,7 +208,7 @@ class TopAggregator(Role, metaclass=ABCMeta):
         logger.debug(f"Incrementing current round: {self._round}")
         logger.debug(f"Total rounds: {self._rounds}")
         self._round += 1
-        self._work_done = self._round > self._rounds
+        self._work_done = (self._round > self._rounds)
 
         channel = self.cm.get_by_tag(self.dist_tag)
         if not channel:
@@ -250,8 +221,8 @@ class TopAggregator(Role, metaclass=ABCMeta):
 
     def save_params(self):
         """Save hyperparamets in a model registry."""
-        if self.config.model.hyperparameters:
-            self.registry_client.save_params(self.config.model.hyperparameters)
+        if self.config.hyperparameters:
+            self.registry_client.save_params(self.config.hyperparameters)
 
     def save_model(self):
         """Save model in a model registry."""
@@ -308,23 +279,10 @@ class TopAggregator(Role, metaclass=ABCMeta):
 
         # create a loop object with loop exit condition function
         loop = Loop(loop_check_fn=lambda: self._work_done)
-        (
-            task_internal_init
-            >> task_load_data
-            >> task_init
-            >> loop(
-                task_put
-                >> task_get
-                >> task_train
-                >> task_eval
-                >> task_analysis
-                >> task_save_metrics
-                >> task_increment_round
-            )
-            >> task_end_of_training
-            >> task_save_params
-            >> task_save_model
-        )
+        task_internal_init >> task_load_data >> task_init >> loop(
+            task_put >> task_get >> task_train >> task_eval >> task_analysis >>
+            task_save_metrics >> task_increment_round
+        ) >> task_end_of_training >> task_save_params >> task_save_model
 
     def run(self) -> None:
         """Run role."""
@@ -332,7 +290,5 @@ class TopAggregator(Role, metaclass=ABCMeta):
 
     @classmethod
     def get_func_tags(cls) -> list[str]:
-        """Return a list of function tags defined in the top level aggregator
-        role.
-        """
+        """Return a list of function tags defined in the top level aggregator role."""
         return [TAG_DISTRIBUTE, TAG_AGGREGATE]
