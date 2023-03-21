@@ -47,6 +47,19 @@ const (
 	baseExampleFolder = rootFolder + "/examples"
 )
 
+var (
+	brokers = []config.Broker{
+		{
+			Sort: string(openapi.MQTT),
+			Host: "localhost",
+		},
+		{
+			Sort: string(openapi.P2P),
+			Host: "localhost:10104",
+		},
+	}
+)
+
 func Test_asyncfl_hier_mnist(t *testing.T) {
 	rootExample := baseExampleFolder + "/asyncfl_hier_mnist"
 
@@ -60,7 +73,9 @@ func Test_asyncfl_hier_mnist(t *testing.T) {
 	dbService, err := mongodb.NewMongoServiceWithClient(ctx, db)
 	assert.NoError(t, err)
 
-	builder := NewJobBuilder(dbService, config.JobParams{})
+	builder := NewJobBuilder(dbService, config.JobParams{
+		Brokers: brokers,
+	})
 	assert.NotNil(t, builder)
 
 	designID := "asyncfl_hier_mnist"
@@ -132,7 +147,9 @@ func Test_distributed_training(t *testing.T) {
 	dbService, err := mongodb.NewMongoServiceWithClient(ctx, db)
 	assert.NoError(t, err)
 
-	builder := NewJobBuilder(dbService, config.JobParams{})
+	builder := NewJobBuilder(dbService, config.JobParams{
+		Brokers: brokers,
+	})
 	assert.NotNil(t, builder)
 
 	designID := "distributed_training"
@@ -202,7 +219,9 @@ func Test_hier_mnist(t *testing.T) {
 	dbService, err := mongodb.NewMongoServiceWithClient(ctx, db)
 	assert.NoError(t, err)
 
-	builder := NewJobBuilder(dbService, config.JobParams{})
+	builder := NewJobBuilder(dbService, config.JobParams{
+		Brokers: brokers,
+	})
 	assert.NotNil(t, builder)
 
 	designID := "hier_mnist"
@@ -276,7 +295,9 @@ func Test_medmnist(t *testing.T) {
 	dbService, err := mongodb.NewMongoServiceWithClient(ctx, db)
 	assert.NoError(t, err)
 
-	builder := NewJobBuilder(dbService, config.JobParams{})
+	builder := NewJobBuilder(dbService, config.JobParams{
+		Brokers: brokers,
+	})
 	assert.NotNil(t, builder)
 
 	designID := "medmnist"
@@ -371,7 +392,9 @@ func Test_mnist(t *testing.T) {
 	dbService, err := mongodb.NewMongoServiceWithClient(ctx, db)
 	assert.NoError(t, err)
 
-	builder := NewJobBuilder(dbService, config.JobParams{})
+	builder := NewJobBuilder(dbService, config.JobParams{
+		Brokers: brokers,
+	})
 	assert.NotNil(t, builder)
 
 	designID := "mnist"
@@ -434,7 +457,9 @@ func Test_parallel_experiment(t *testing.T) {
 	dbService, err := mongodb.NewMongoServiceWithClient(ctx, db)
 	assert.NoError(t, err)
 
-	builder := NewJobBuilder(dbService, config.JobParams{})
+	builder := NewJobBuilder(dbService, config.JobParams{
+		Brokers: brokers,
+	})
 	assert.NotNil(t, builder)
 
 	designID := "parallel_experiment"
@@ -476,6 +501,72 @@ func Test_parallel_experiment(t *testing.T) {
 			"asia": []string{datasetAsiaID},
 			"uk":   []string{datasetEuUkID},
 			"us":   []string{datasetUsWestID},
+		},
+	}
+	jobStatus, err := dbService.CreateJob(userID, jobSpecData)
+	assert.NoError(t, err)
+	assert.Equal(t, openapi.READY, jobStatus.State)
+
+	jobSpec, err := dbService.GetJob(userID, jobStatus.Id)
+	assert.NoError(t, err)
+
+	tasks, roles, err := builder.GetTasks(&jobSpec)
+	assert.NoError(t, err)
+
+	sort.Strings(roles)
+	expectedRoles := []string{"aggregator", "trainer"}
+	assert.Equal(t, expectedRoles, roles)
+
+	exampleConfigPath := "testdata/" + designID
+	validateTasks(t, exampleConfigPath, tasks)
+}
+
+func Test_hybrid(t *testing.T) {
+	rootExample := baseExampleFolder + "/hybrid"
+
+	db := connect(t)
+	userID := uuid.NewString()
+	ctx := context.Background()
+
+	dbService, err := mongodb.NewMongoServiceWithClient(ctx, db)
+	assert.NoError(t, err)
+
+	builder := NewJobBuilder(dbService, config.JobParams{
+		Brokers: brokers,
+	})
+	assert.NotNil(t, builder)
+
+	designID := "hybrid"
+
+	err = dbService.CreateDesign(userID, openapi.Design{
+		Name:        userID,
+		UserId:      userID,
+		Id:          designID,
+		Description: "hybrid example",
+		Schemas:     []openapi.DesignSchema{},
+	})
+	assert.NoError(t, err)
+
+	var designSchemaData openapi.DesignSchema
+	readFileToStruct(t, rootExample+"/schema.json", &designSchemaData)
+	err = dbService.CreateDesignSchema(userID, designID, designSchemaData)
+	assert.NoError(t, err)
+
+	designCodeFile, err := os.Open(rootExample + "/hybrid.zip")
+	assert.NoError(t, err)
+	err = dbService.CreateDesignCode(userID, designID, "hybrid", "zip", designCodeFile)
+	assert.NoError(t, err)
+
+	var dataset openapi.DatasetInfo
+	readFileToStruct(t, rootExample+"/dataset.json", &dataset)
+	datasetID, err := dbService.CreateDataset(userID, dataset)
+	assert.NoError(t, err)
+
+	var jobSpecData openapi.JobSpec
+	readFileToStruct(t, rootExample+"/job.json", &jobSpecData)
+	jobSpecData.DataSpec.FromSystem = map[string]map[string][]string{
+		"trainer": {
+			"us": []string{datasetID},
 		},
 	}
 	jobStatus, err := dbService.CreateJob(userID, jobSpecData)

@@ -15,33 +15,33 @@
         "uri": ""
     },
     "job": {
-        "id": "64145f7c10b9b3b94f5252b9",
-        "name": "medmnist"
+        "id": "64145f7c10b9b3b94f5252bd",
+        "name": "hybrid"
     },
     "role": "trainer",
     "realm": "",
     "channels": [
         {
-            "name": "param-channel",
-            "description": "Model update is sent from trainer to aggregator and vice-versa",
+            "description": "Model update is sent from a trainer to an aggregator",
+            "groupBy": {
+                "type": "tag",
+                "value": [
+                    "default"
+                ]
+            },
+            "name": "global-channel",
             "pair": [
                 "trainer",
                 "aggregator"
             ],
-            "groupBy": {
-                "type": "tag",
-                "value": [
-                    "us"
-                ]
-            },
             "funcTags": {
-                "aggregator": [
-                    "distribute",
-                    "aggregate"
-                ],
                 "trainer": [
                     "fetch",
                     "upload"
+                ],
+                "aggregator": [
+                    "distribute",
+                    "aggregate"
                 ]
             }
         }
@@ -49,9 +49,9 @@
     "groupAssociation": {
         "param-channel": "us"
     },
-    "maxRunTime": 86400,
+    "maxRunTime": 300,
     "baseModel": {},
-    "dataset": "https://raw.github.com/GaoxiangLuo/flame-datasets/main/site8.npz",
+    "dataset": "https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz",
     "optimizer": {},
     "selector": {}
 }

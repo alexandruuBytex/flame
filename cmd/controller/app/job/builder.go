@@ -88,6 +88,10 @@ func (b *JobBuilder) GetTasks(jobSpec *openapi.JobSpec) (
 		return nil, nil, err
 	}
 
+	if err = b.perChannelBackendCheck(); err != nil {
+		return nil, nil, err
+	}
+
 	tasks, roles, err = b.build()
 	if err != nil {
 		return nil, nil, err
@@ -185,6 +189,27 @@ func (b *JobBuilder) setup() error {
 	}
 
 	// Return nil if there are no errors encountered during the execution of declared functions.
+	return nil
+}
+
+func (b *JobBuilder) perChannelBackendCheck() error {
+	var backend = b.jobSpec.Backend
+
+	if backend == "" {
+		return fmt.Errorf("Validation failed! Invalid backend!")
+	}
+
+	switch backend {
+	case openapi.MQTT, openapi.P2P:
+		for _, channel := range b.channels {
+			if channel.Backend != "" && channel.Backend != backend {
+				return fmt.Errorf("Validation failed! Invalid channel backend!")
+			}
+		}
+	default:
+		return fmt.Errorf("Validation failed! Invalid root backend!")
+	}
+
 	return nil
 }
 
