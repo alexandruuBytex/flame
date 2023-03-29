@@ -583,6 +583,10 @@ func Test_hybrid(t *testing.T) {
 	expectedRoles := []string{"aggregator", "trainer"}
 	assert.Equal(t, expectedRoles, roles)
 
+	for _, task := range tasks {
+		fmt.Println(task.JobConfig.Channels)
+	}
+	// fmt.Println(fmt.Sprintf("len config: %d", len(tasks[0].JobConfig.Channels)))
 	exampleConfigPath := "testdata/" + designID
 	validateTasks(t, exampleConfigPath, tasks)
 }

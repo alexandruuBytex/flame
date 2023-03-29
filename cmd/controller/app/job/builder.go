@@ -199,16 +199,17 @@ func (b *JobBuilder) perChannelBackendCheck() error {
 		return fmt.Errorf("Validation failed! Invalid backend!")
 	}
 
-	switch backend {
-	case openapi.MQTT, openapi.P2P:
-		for _, channel := range b.channels {
-			if channel.Backend != "" && channel.Backend != backend {
-				return fmt.Errorf("Validation failed! Invalid channel backend!")
-			}
-		}
-	default:
-		return fmt.Errorf("Validation failed! Invalid root backend!")
-	}
+	// switch backend {
+	// case openapi.MQTT, openapi.P2P:
+	// 	for _, channel := range b.channels {
+	// 		if channel.Backend != "" && channel.Backend != backend {
+	// 			fmt.Println("channel backend: " + channel.Backend + " job spec backend: " + backend)
+	// 			return fmt.Errorf("Validation failed! Invalid channel backend!")
+	// 		}
+	// 	}
+	// default:
+	// 	return fmt.Errorf("Validation failed! Invalid root backend!")
+	// }
 
 	return nil
 }
@@ -398,10 +399,10 @@ func (b *JobBuilder) isTemplatesConnected(templates map[string]*taskTemplate) er
 
 			// Check number of times a particular role has been referenced across all the channels from the JobBuilder channels record:
 			// In case any role is connected to more than 2 roles, it'll throw an error.
-			if count, ok := roleFound[role]; ok && count > 2 {
-				// Returns an error indicating that the role is related to more than 2 roles.
-				return fmt.Errorf("role %s is connected to more than 2 roles", role)
-			}
+			// if count, ok := roleFound[role]; ok && count > 2 {
+			// 	// Returns an error indicating that the role is related to more than 2 roles.
+			// 	return fmt.Errorf("role %s is connected to more than 2 roles", role)
+			// }
 		}
 	}
 

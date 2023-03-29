@@ -8,7 +8,12 @@
             "isDataConsumer": true,
             "groupAssociation": [
                 {
-                    "param-channel": "us"
+                    "param-channel": "us",
+        			"global-channel": "default"
+                },
+				{
+                    "param-channel": "eu",
+        			"global-channel": "default"
                 }
             ]
         },
@@ -18,13 +23,36 @@
             "replica": 1,
             "groupAssociation": [
                 {
-                    "param-channel": "us"
+                    "param-channel": "us",
+					"global-channel": "default"
                 }
             ]
         }
     ],
     "channels": [
+		{
+			"backend": "p2p",
+            "description": "Model update is sent from a trainer to another trainer",
+            "groupBy": {
+                "type": "tag",
+                "value": [
+                    "us",
+                    "eu"
+                ]
+            },
+            "name": "param-channel",
+            "pair": [
+                "trainer",
+                "trainer"
+            ],
+            "funcTags": {
+                "trainer": [
+                    "ring_allreduce"
+                ]
+            }
+        },
         {
+			"backend": "mqtt",
             "description": "Model update is sent from a trainer to an aggregator",
             "groupBy": {
                 "type": "tag",
