@@ -611,6 +611,17 @@ func compareJobConfig(t *testing.T, expected, received objects.JobConfig) {
 	assert.Equal(t, expected.Job.Name, received.Job.Name)
 	assert.Equal(t, expected.Role, received.Role)
 	assert.Equal(t, expected.Realm, received.Realm)
+
+	// NOTE: quick and dirty fix
+	sort.Slice(expected.Channels, func(i int, j int) bool {
+		return expected.Channels[i].Name < expected.Channels[j].Name
+	})
+
+	// NOTE: quick and dirty fix
+	sort.Slice(received.Channels, func(i int, j int) bool {
+		return received.Channels[i].Name < received.Channels[j].Name
+	})
+
 	assert.Equal(t, expected.Channels, received.Channels)
 
 	assert.Equal(t, len(expected.GroupAssociation), len(received.GroupAssociation))

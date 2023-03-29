@@ -1,6 +1,6 @@
 {
-    "name": "A simple example schema v1.0.0",
-    "description": "a sample schema to demonstrate a TAG layout",
+    "name": "a schema for hybrid topology",
+    "description": "a sample schema to demonstrate a hybrid topology",
     "roles": [
         {
             "name": "trainer",
@@ -9,11 +9,11 @@
             "groupAssociation": [
                 {
                     "param-channel": "us",
-        			"global-channel": "default"
+                    "global-channel": "default"
                 },
-				{
+                {
                     "param-channel": "eu",
-        			"global-channel": "default"
+                    "global-channel": "default"
                 }
             ]
         },
@@ -23,21 +23,20 @@
             "replica": 1,
             "groupAssociation": [
                 {
-                    "param-channel": "us",
-					"global-channel": "default"
+                    "global-channel": "default"
                 }
             ]
         }
     ],
     "channels": [
-		{
-			"backend": "p2p",
+	{
+            "backend": "p2p",
             "description": "Model update is sent from a trainer to another trainer",
             "groupBy": {
                 "type": "tag",
                 "value": [
-                    "us",
-                    "eu"
+                    "eu",
+                    "us"
                 ]
             },
             "name": "param-channel",
@@ -52,7 +51,7 @@
             }
         },
         {
-			"backend": "mqtt",
+            "backend": "mqtt",
             "description": "Model update is sent from a trainer to an aggregator",
             "groupBy": {
                 "type": "tag",

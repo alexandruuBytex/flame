@@ -1,5 +1,5 @@
 {
-    "taskid": "205f9fc483cf4df68a2409257b5fad7d3c580373",
+    "taskid": "205f9fc483cf4df68a2409257b5fad7d3c580372",
     "backend": "mqtt",
     "brokers": [
         {
@@ -12,18 +12,18 @@
         }
     ],
     "groupAssociation": {
-        "param-channel": "us",
+        "param-channel": "eu",
         "global-channel": "default"
     },
     "channels": [
         {
-			"backend": "p2p",
+            "backend": "p2p",
             "description": "Model update is sent from a trainer to another trainer",
             "groupBy": {
                 "type": "tag",
                 "value": [
-                    "us",
-                    "eu"
+                    "eu",
+                    "us"
                 ]
             },
             "name": "param-channel",
@@ -38,7 +38,7 @@
             }
         },
         {
-			"backend": "mqtt",
+            "backend": "mqtt",
             "description": "Model update is sent from a trainer to an aggregator",
             "groupBy": {
                 "type": "tag",
@@ -68,5 +68,6 @@
         "name": "hybrid"
     },
     "maxRunTime": 300,
-    "role": "trainer"
+    "role": "trainer",
+    "dataset": "https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz"
 }

@@ -1,5 +1,5 @@
 {
-    "taskid": "205f9fc483cf4df68a2409257b5fad7d3c580370",
+    "taskid": "505f9fc483cf4df68a2409257b5fad7d3c580371",
     "backend": "mqtt",
     "brokers": [
         {
@@ -12,33 +12,11 @@
         }
     ],
     "groupAssociation": {
-        "param-channel": "eu",
         "global-channel": "default"
     },
     "channels": [
         {
-			"backend": "p2p",
-            "description": "Model update is sent from a trainer to another trainer",
-            "groupBy": {
-                "type": "tag",
-                "value": [
-                    "us",
-                    "eu"
-                ]
-            },
-            "name": "param-channel",
-            "pair": [
-                "trainer",
-                "trainer"
-            ],
-            "funcTags": {
-                "trainer": [
-                    "ring_allreduce"
-                ]
-            }
-        },
-        {
-			"backend": "mqtt",
+            "backend": "mqtt",
             "description": "Model update is sent from a trainer to an aggregator",
             "groupBy": {
                 "type": "tag",
@@ -68,5 +46,5 @@
         "name": "hybrid"
     },
     "maxRunTime": 300,
-    "role": "trainer"
+    "role": "aggregator"
 }
